@@ -1,0 +1,31 @@
+From: Olivier Fredj <ofredj@online.net>
+Description: add big_selects to mysqldump
+Forwarded: not-needed
+Reviewed-by: livier Fredj <ofredj@online.net>
+Last-Update: 2014-01-01
+Index: mysql-5.5-5.5.31+dfsg/client/mysqldump.c
+===================================================================
+--- mysql-5.5-5.5.31+dfsg.orig/client/mysqldump.c	2014-09-08 11:53:17.000000000 +0200
++++ mysql-5.5-5.5.31+dfsg/c/mysqldump.c	2014-12-01 18:31:50.734852129 +0100
+@@ -1484,7 +1484,7 @@
+ 
+   if (opt_default_auth && *opt_default_auth)
+     mysql_options(&mysql_connection, MYSQL_DEFAULT_AUTH, opt_default_auth);
+-
++    
+   if (!(mysql= mysql_real_connect(&mysql_connection,host,user,passwd,
+                                   NULL,opt_mysql_port,opt_mysql_unix_port,
+                                   0)))
+@@ -1520,6 +1520,12 @@
+     if (mysql_query_with_error_report(mysql, 0, buff))
+       DBUG_RETURN(1);
+   }
++  /*
++   * ofredj -- add BIG_SELECTS
++   */
++  my_snprintf(buff, sizeof(buff), "SET SESSION SQL_BIG_SELECTS=ON;");
++  if (mysql_query_with_error_report(mysql, 0, buff))
++    DBUG_RETURN(1);
+   DBUG_RETURN(0);
+ } /* connect_to_db */
+ 
